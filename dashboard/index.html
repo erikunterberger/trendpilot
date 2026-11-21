@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrendPilot</title>
+<link rel="stylesheet" href="style.css">
+<script src="vendor/chart.umd.min.js"></script>
+<script src="vendor/marked.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>TrendPilot</h1>
+    <span id="meta-line"></span>
+  </div>
+  <div class="networth-chip">
+    <span class="label">Net Worth</span>
+    <span class="value" id="header-networth">—</span>
+  </div>
+</header>
+
+<nav id="tabs">
+  <button class="tab active" data-page="portfolio">Portfolio</button>
+  <button class="tab" data-page="news">Market News</button>
+  <button class="tab" data-page="suggested">Buy / Sell</button>
+  <button class="tab" data-page="overall">Market Overview</button>
+  <button class="tab" data-page="report">Full Report</button>
+</nav>
+
+<main>
+  <section id="page-portfolio" class="page active">
+    <div class="stat-row" id="portfolio-stats"></div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>Where Your Money Is</h2>
+        <div class="chart-wrap"><canvas id="allocation-chart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Net Worth Over Time</h2>
+        <div class="chart-wrap"><canvas id="networth-chart"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h2>Holdings</h2>
+        <button id="refresh-btn" class="btn-refresh">&#8635; Refresh Prices</button>
+      </div>
+      <div id="refresh-status" class="refresh-status"></div>
+      <div id="holdings-table"></div>
+    </div>
+    <div class="card" id="paper-card" style="display:none">
+      <h2>Alpaca Paper Account <span class="muted" style="font-weight:400;font-size:12px">— test money, not counted in net worth</span></h2>
+      <div id="paper-table"></div>
+    </div>
+    <div class="card">
+      <h2>Accounts</h2>
+      <div id="accounts-table"></div>
+    </div>
+  </section>
+
+  <section id="page-news" class="page">
+    <div class="card risk-card">
+      <h2>Risks &amp; What to Watch</h2>
+      <div id="risks-content" class="md"></div>
+    </div>
+    <div class="card">
+      <h2>Market Situation</h2>
+      <div id="situation-content" class="md"></div>
+    </div>
+    <div class="card">
+      <h2>Top Business Headlines</h2>
+      <div id="news-top"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>Market News</h2>
+        <div id="news-market"></div>
+      </div>
+      <div class="card">
+        <h2>Sector News</h2>
+        <div id="news-sector"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-suggested" class="page">
+    <div class="card">
+      <h2>Today's Actions</h2>
+      <p class="muted" style="font-size:12px;margin-top:0">Levels come from price data, not the model. No profit targets: after buying, place a stop-loss at the initial stop; once the trade is working it becomes a trailing stop and rides the trend. Flat trades are sold after two weeks.</p>
+      <div id="action-cards" class="picks-grid"></div>
+    </div>
+    <div class="card" id="account-card" style="display:none">
+      <h2 id="account-title">Your Alpaca Account</h2>
+      <div id="autotrade-line" class="muted" style="font-size:12px;margin:-6px 0 10px"></div>
+      <div class="stat-row" id="account-stats"></div>
+      <div id="trades-block"></div>
+      <div id="account-table"></div>
+    </div>
+    <div class="card">
+      <h2>Open Positions</h2>
+      <div id="positions-table"></div>
+    </div>
+    <div class="card">
+      <h2>Track Record vs S&amp;P 500</h2>
+      <p class="muted" style="font-size:12px;margin-top:0">Every recommendation the agent has ever made, scored as if it had been followed under the current exit rules (initial stop, trailing stop, two-week flat-trade exit), against the S&amp;P 500 over the same dates. <b>These are not trades in your account</b> — they're how the agent's advice would have done, and what it learns from.</p>
+      <div class="stat-row" id="track-stats"></div>
+      <h3>Most recent scored picks</h3>
+      <div id="recent-table"></div>
+      <h3>By setup</h3>
+      <div id="setup-table"></div>
+      <h3>Learned rules in effect</h3>
+      <ul id="rules-list"></ul>
+    </div>
+    <div class="card">
+      <h2>New Ideas — Analysis</h2>
+      <div id="ideas-content" class="md"></div>
+    </div>
+    <div class="card">
+      <h2>Open Position Review</h2>
+      <div id="review-content" class="md"></div>
+    </div>
+  </section>
+
+  <section id="page-overall" class="page">
+    <div class="stat-row" id="macro-stats"></div>
+    <div class="card">
+      <h2>Sector Performance</h2>
+      <div id="sector-bars"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>Top Gainers</h2>
+        <div id="gainers-table"></div>
+      </div>
+      <div class="card">
+        <h2>Top Losers</h2>
+        <div id="losers-table"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Most Active</h2>
+      <div id="active-table"></div>
+    </div>
+    <div class="card">
+      <h2>Upcoming Earnings (Next 14 Days)</h2>
+      <div id="earnings-table"></div>
+    </div>
+  </section>
+
+  <section id="page-report" class="page">
+    <div class="card">
+      <div id="full-report" class="md"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Automated analysis for informational purposes only — not personalized financial advice.
+</footer>
+
+<!-- data.js is rewritten by every agent run. A unique URL per page load means
+     a browser can never show a stale copy it cached from an earlier run. -->
+<script>document.write('<script src="data.js?v=' + Date.now() + '"><\/script>');</script>
+<script src="app.js"></script>
+</body>
+</html>

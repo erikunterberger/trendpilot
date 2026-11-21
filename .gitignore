@@ -1,0 +1,13 @@
+.env
+venv/
+profile/
+dashboard/data.js
+__pycache__/
+*.pyc
+reports/*.md
+reports/*.pdf
+reports/*.json
+reports/*.txt
+reports/*.tmp
+reports/cache/
+!reports/.gitkeep
