@@ -174,7 +174,7 @@ With `ALPACA_AUTOTRADE=paper`, each run also places the trades: one OTO order pe
 
 ### Scheduling
 
-A daily run before the market opens is the intended cadence: decisions use daily bars, and stop orders at the broker protect positions in between. On Windows, Task Scheduler running `run_daily.bat` weekdays at 7:00 AM works well (enable *wake to run* and *run as soon as possible after a missed start*). Output is appended to `reports/run_log.txt`.
+A daily run before the market opens is the intended cadence: decisions use daily bars, and stop orders at the broker protect positions in between. On Windows, point Task Scheduler at `venv\Scripts\pythonw.exe -m src.daily_runner` (working directory = repo root) weekdays at 7:00 AM, plus *at log on* and *on workstation unlock* triggers as a catch-up for a laptop that slept through 7:00 (enable *wake to run* and *run as soon as possible after a missed start*). `pythonw` means no console window to close by accident, and `src/daily_runner.py` runs the pipeline at most once per weekday (skips weekends, retries a failed day at most twice). Output is appended to `reports/run_log.txt`; `run_daily.bat` starts the same runner by hand.
 
 ---
 

@@ -1,11 +1,14 @@
 @echo off
-rem Daily TrendPilot run — invoked by Windows Task Scheduler every weekday morning.
-rem %~dp0 is this script's own folder, so the job doesn't depend on where the
-rem repo happens to live.
+rem Manual launcher for the daily TrendPilot run (Task Scheduler calls
+rem venv\Scripts\pythonw.exe -m src.daily_runner directly).
+rem Runs windowless in the background via src.daily_runner, which appends all
+rem output to reports\run_log.txt and runs at most once per weekday.
+rem   run_daily.bat           run if today's run hasn't happened yet
+rem   run_daily.bat --force   run again anyway
+rem   run_daily.bat --check   show whether it would run, without running
 cd /d "%~dp0"
-echo ================================ >> reports\run_log.txt
-echo Run started %date% %time% >> reports\run_log.txt
-rem -u: unbuffered. With output redirected to a file, Python otherwise holds
-rem it in a buffer, and an interrupted run lost every line it had printed.
-venv\Scripts\python.exe -u -m src.main >> reports\run_log.txt 2>&1
-echo Run finished %date% %time% (exit %errorlevel%) >> reports\run_log.txt
+if /i "%~1"=="--check" (
+    venv\Scripts\python.exe -m src.daily_runner --check
+) else (
+    start "" venv\Scripts\pythonw.exe -m src.daily_runner %*
+)
